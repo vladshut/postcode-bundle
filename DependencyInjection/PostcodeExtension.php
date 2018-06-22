@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * Class AppPostcodeExtension
+ * Class PostcodeExtension
  *
  *
  */

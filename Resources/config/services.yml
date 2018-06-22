@@ -14,5 +14,5 @@ services:
 
     postcode.service:
       public: true
-      class: App\PostcodeBundle\Services\AddressClient
+      class: PostcodeBundle\Services\AddressClient
       arguments: ["@postcode.api_client"]

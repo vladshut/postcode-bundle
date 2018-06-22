@@ -17,7 +17,7 @@ Installation is a quick 4 step process:
 
 ### Step 1: Download postcode-bundle using composer
 
-Add AppPostcodeBundle by running the command:
+Add PostcodeBundle by running the command:
 
 ``` bash
 $ composer require vladshut/postcode-bundle
@@ -34,7 +34,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new App\PostcodeBundle\AppPostcodeBundle(),
+        new PostcodeBundle\PostcodeBundle(),
     );
 }
 ```
@@ -55,7 +55,7 @@ app_postcode:
 # app/config/routing.yml
 
 postcode:
-    resource: "@AppPostcodeBundle/Resources/config/routing.yml"
+    resource: "@PostcodeBundle/Resources/config/routing.yml"
     prefix:   /
 
 ```

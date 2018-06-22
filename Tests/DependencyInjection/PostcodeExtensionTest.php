@@ -6,11 +6,11 @@ use PostcodeBundle\DependencyInjection\PostcodeExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 /**
- * Class AppPostcodeExtensionTest
+ * Class PostcodeExtensionTest
  *
  *
  */
-class AppPostcodeExtensionTest extends AbstractExtensionTestCase
+class PostcodeExtensionTest extends AbstractExtensionTestCase
 {
     public function testAfterLoadingTheCorrectParameterHasBeenSet()
     {
