@@ -1,9 +1,18 @@
 services:
-    usoft.address.guzzle:
+    postcode.guzzle:
       class: GuzzleHttp\Client
+      arguments: [{headers: {X-Api-Key: "%postcode_api_key%"}}]
 
-    usoft.postcode.client:
-      class: Usoft\PostcodeBundle\Services\AddressClient
-      arguments:
-          - "@usoft.address.guzzle"
-          - "%postcode_api_key%"
+    postcode.guzzle_adapter:
+      class: Http\Adapter\Guzzle6\Client
+      arguments: ["@postcode.guzzle"]
+
+    postcode.api_client:
+      class: FH\PostcodeAPI\Client
+      arguments: ["@postcode.guzzle_adapter"]
+
+
+    postcode.service:
+      public: true
+      class: App\PostcodeBundle\Services\AddressClient
+      arguments: ["@postcode.api_client"]

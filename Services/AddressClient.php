@@ -1,94 +1,118 @@
 <?php
-/*
-* (c) Wessel Strengholt <wessel.strengholt@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
 
-namespace Usoft\PostcodeBundle\Services;
+namespace PostcodeBundle\Services;
 
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Psr7\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Usoft\PostcodeBundle\Exceptions\InvalidApiResponseException;
-use Usoft\PostcodeBundle\Exceptions\InvalidPostcodeException;
-use Usoft\PostcodeBundle\Model\Address;
+use FH\PostcodeAPI\Client;
+use PostcodeBundle\Exceptions\InvalidApiResponseException;
+use PostcodeBundle\Exceptions\InvalidPostcodeException;
+use PostcodeBundle\Model\Address;
 
 /**
  * Class AddressClient
  *
- * @author Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
  */
 class AddressClient
 {
-    /** @var ClientInterface */
+    /** @var Client */
     private $client;
 
-    /** @var string */
-    private $apiKey;
-
     /**
-     * @param ClientInterface $client
-     * @param string          $apiKey
+     * @param Client $client
      */
-    public function __construct(ClientInterface $client, $apiKey)
+    public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->apiKey = $apiKey;
     }
 
     /**
-     * @param string  $postcode
-     * @param integer $houseNumber
+     * @param string $postcode
+     * @param int $houseNumber
      *
-     * @throws InvalidPostcodeException
+     * @param int|null $from
+     * @return Address[]|array
      * @throws InvalidApiResponseException
-     *
-     * @return Address
+     * @throws InvalidPostcodeException
      */
-    public function getAddress($postcode, $houseNumber)
+    public function getAddresses($postcode, int $houseNumber = null, int $from = null)
     {
         if (0 === preg_match('/^[1-9]{1}[0-9]{3}[\s]{0,1}[a-z]{2}$/i', $postcode)) {
             throw new InvalidPostcodeException('Given postcode incorrect');
         }
 
-        $header = ['X-Api-Key' => $this->apiKey];
-        $url = sprintf('https://postcode-api.apiwise.nl/v2/addresses/?postcode=%s&number=%d', $postcode, (int) $houseNumber);
-        $request = new Request('GET', $url, $header);
-
         try {
-            $response = $this->client->send($request);
+            $data = $this->client->getAddresses($postcode, $houseNumber, $from);
 
-            if ($response->getStatusCode() !== Response::HTTP_OK) {
-                throw new InvalidApiResponseException('The API does not return a 200 status-code');
-            }
-
-            $data = json_decode($response->getBody()->getContents(), true);
-
-            if (false === isset($data['_embedded']['addresses'][0])) {
+            if (!isset($data->_embedded->addresses)) {
                 throw new InvalidApiResponseException('Address cannot be set from API data');
             }
 
-            $address = $data['_embedded']['addresses'][0];
+            $addresses = $data->_embedded->addresses;
+            $addressesObjects = [];
 
-            $city = $address['city']['label'];
-            $municipality = $address['municipality']['label'];
-            $street = $address['street'];
-            $province = $address['province']['label'];
-
-            $geoLocation = [
-                'longitude'  => isset($address['geo']['center']['wgs84']['coordinates'][1]) ? $address['geo']['center']['wgs84']['coordinates'][0] : null,
-                'latitude' => isset($address['geo']['center']['wgs84']['coordinates'][0]) ? $address['geo']['center']['wgs84']['coordinates'][1] : null,
-            ];
-
-            $address = new Address($street, $postcode, $city, $houseNumber, $province, $municipality);
-            $address->setGeoLocation($geoLocation);
-
-            return $address;
-
+            foreach ($addresses as $apiData) {
+                $addressesObjects[] = $this->getAddressFromApiData($apiData);
+            }
         } catch (\Exception $exception) {
             throw new InvalidApiResponseException($exception->getMessage());
         }
+
+        return $addressesObjects;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Address
+     * @throws InvalidApiResponseException
+     */
+    public function getAddress(string $id)
+    {
+        try {
+            $apiData = $this->client->getAddress($id);
+            $address = $this->getAddressFromApiData($apiData);
+        } catch (\Exception $exception) {
+            throw new InvalidApiResponseException($exception->getMessage());
+        }
+
+        return $address;
+    }
+
+    /**
+     * @param \stdClass $data
+     * @return Address
+     */
+    private function getAddressFromApiData(\stdClass $data)
+    {
+        $city = $data->city->label ?? null;
+        $municipality = $data->municipality->label ?? null;
+        $street = $data->street ?? null;
+        $province = $data->province->label ?? null;
+        $houseNumber = $data->number ?? null;
+        $postcode = $data->postcode ?? null;
+        $surface = $data->surface ?? null;
+        $buildingAge = $data->year ?? null;
+        $purpose = $data->purpose ?? null;
+
+        $geoLocation = [
+            'longitude'  => $data->geo->center->wgs84->coordinates[0] ?? null,
+            'latitude' => $data->geo->center->wgs84->coordinates[1] ?? null,
+        ];
+
+        $address = new Address(
+            $street,
+            $postcode,
+            $city,
+            $houseNumber,
+            $province,
+            $municipality,
+            $surface,
+            $buildingAge,
+            $purpose
+        );
+
+        $address->setGeoLocation($geoLocation);
+
+        return $address;
     }
 }

@@ -1,44 +1,57 @@
 <?php
-/*
-* (c) Wessel Strengholt <wessel.strengholt@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
 
-namespace Usoft\PostcodeBundle\Tests\Model;
+namespace PostcodeBundle\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
-use Usoft\PostcodeBundle\Model\Address;
+use PostcodeBundle\Model\Address;
 
 /**
  * Class AddressTest
  *
- * @author Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
  */
 class AddressTest extends TestCase
 {
     public function testAddress()
     {
-        $address = new Address('Test Street', '1010AB', 'Haarlem', 666, 'Noord-Holland', 'Haarlem');
-        $address->setGeoLocation(['lat' => 42.3243, 'long' => 32.3424]);
+        $addressValues = [
+            'street' => 'Test Street',
+            'postcode' => '1010AB',
+            'city' => 'Haarlem',
+            'house_number' => 666,
+            'province' => 'Noord-Holland',
+            'municipality' => 'Haarlem',
+            'surface' => 60.0,
+            'building_age' => 1994,
+            'purpose' => 'living',
+            'geo_location' => ['lat' => 42.3243, 'long' => 32.3424],
+        ];
 
-        $this->assertSame($address->getStreet(), 'Test Street');
-        $this->assertSame($address->getZipcode(), '1010AB');
-        $this->assertSame($address->getCity(), 'Haarlem');
-        $this->assertSame($address->getNumber(), 666);
-        $this->assertSame($address->getProvince(), 'Noord-Holland');
-        $this->assertSame($address->getMunicipality(), 'Haarlem');
-        $this->assertSame($address->getGeoLocation(), ['lat' => 42.3243, 'long' => 32.3424]);
+        $address = new Address(
+            $addressValues['street'],
+            $addressValues['postcode'],
+            $addressValues['city'],
+            $addressValues['house_number'],
+            $addressValues['province'],
+            $addressValues['municipality'],
+            $addressValues['surface'],
+            $addressValues['building_age'],
+            $addressValues['purpose']
 
-        $this->assertSame([
-            'street'        => 'Test Street',
-            'zipcode'       => '1010AB',
-            'city'          => 'Haarlem',
-            'house_number'  => 666,
-            'province'      => 'Noord-Holland',
-            'municipality'  => 'Haarlem',
-            'geo_location'  => ['lat' => 42.3243, 'long' => 32.3424],
-        ], $address->toArray());
+        );
+        $address->setGeoLocation($addressValues['geo_location']);
+
+        $this->assertSame($address->getStreet(), $addressValues['street']);
+        $this->assertSame($address->getPostcode(), $addressValues['postcode']);
+        $this->assertSame($address->getCity(), $addressValues['city']);
+        $this->assertSame($address->getNumber(), $addressValues['house_number']);
+        $this->assertSame($address->getProvince(), $addressValues['province']);
+        $this->assertSame($address->getMunicipality(), $addressValues['municipality']);
+        $this->assertSame($address->getSurface(), $addressValues['surface']);
+        $this->assertSame($address->getBuildingAge(), $addressValues['building_age']);
+        $this->assertSame($address->getPurpose(), $addressValues['purpose']);
+        $this->assertSame($address->getGeoLocation(), $addressValues['geo_location']);
+
+        $this->assertSame($addressValues, $address->jsonSerialize());
     }
 }

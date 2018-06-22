@@ -1,14 +1,14 @@
 <?php
 
-namespace Usoft\PostcodeBundle;
+namespace App\PostcodeBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class UsoftPostcodeBundle
+ * Class AppPostcodeBundle
  *
- * (c) Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
  */
-class UsoftPostcodeBundle extends Bundle
+class AppPostcodeBundle extends Bundle
 {
 }

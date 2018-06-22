@@ -1,12 +1,7 @@
 <?php
-/*
-* (c) Wessel Strengholt <wessel.strengholt@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
 
-namespace Usoft\PostcodeBundle\Controller;
+
+namespace PostcodeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class PostcodeController
  *
- * @author Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
  */
 class PostcodeController extends Controller
 {
@@ -31,7 +26,7 @@ class PostcodeController extends Controller
             $postcode    = $request->get('postcode');
             $houseNumber = $request->get('nummer');
 
-            $address = $this->get('usoft.postcode.client')->getAddress($postcode, $houseNumber);
+            $address = $this->get('app.postcode.client')->getAddress($postcode, $houseNumber);
 
             return new JsonResponse($address->toArray());
         } catch (\Exception $exception) {

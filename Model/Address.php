@@ -1,30 +1,24 @@
 <?php
-/*
-* (c) Wessel Strengholt <wessel.strengholt@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
 
-namespace Usoft\PostcodeBundle\Model;
+namespace PostcodeBundle\Model;
 
 /**
  * Class Address
  *
- * @author Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
  */
-class Address
+class Address implements \JsonSerializable
 {
     /** @var string */
     private $street;
 
     /** @var string */
-    private $zipcode;
+    private $postcode;
 
     /** @var string */
     private $city;
 
-    /** @var integer */
+    /** @var string */
     private $number;
 
     /** @var string */
@@ -36,28 +30,52 @@ class Address
     /** @var string */
     private $municipality;
 
+    /** @var float in square meters */
+    private $surface;
+
+    /** @var int */
+    private $buildingAge;
+
+    /** @var string */
+    private $purpose;
+
     /**
-     * @param string  $street
-     * @param string  $zipcode
-     * @param string  $city
-     * @param integer $number
-     * @param string  $province
-     * @param string  $municipality
+     * @param string $street
+     * @param string $postcode
+     * @param string $city
+     * @param string $number
+     * @param string $province
+     * @param string $municipality
+     * @param $surface
+     * @param $buildingAge
+     * @param $purpose
      */
-    public function __construct($street, $zipcode, $city, $number, $province, $municipality)
-    {
+    public function __construct(
+        ?string $street,
+        ?string $postcode,
+        ?string $city,
+        ?string $number,
+        ?string $province,
+        ?string $municipality,
+        ?float $surface,
+        ?int $buildingAge,
+        ?string $purpose
+    ) {
         $this->street   = $street;
-        $this->zipcode  = $zipcode;
+        $this->postcode  = $postcode;
         $this->city     = $city;
         $this->number   = $number;
         $this->province = $province;
         $this->municipality = $municipality;
+        $this->surface = $surface;
+        $this->buildingAge = $buildingAge;
+        $this->purpose = $purpose;
     }
 
     /**
      * @return string
      */
-    public function getStreet()
+    public function getStreet(): ?string
     {
         return $this->street;
     }
@@ -65,15 +83,15 @@ class Address
     /**
      * @return string
      */
-    public function getZipcode()
+    public function getPostcode(): ?string
     {
-        return $this->zipcode;
+        return $this->postcode;
     }
 
     /**
      * @return string
      */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -81,7 +99,7 @@ class Address
     /**
      * @return integer
      */
-    public function getNumber()
+    public function getNumber(): ?int
     {
         return $this->number;
     }
@@ -89,7 +107,7 @@ class Address
     /**
      * @return string
      */
-    public function getMunicipality()
+    public function getMunicipality(): ?string
     {
         return $this->municipality;
     }
@@ -97,7 +115,7 @@ class Address
     /**
      * @return string
      */
-    public function getProvince()
+    public function getProvince(): ?string
     {
         return $this->province;
     }
@@ -105,7 +123,7 @@ class Address
     /**
      * @return array
      */
-    public function getGeoLocation()
+    public function getGeoLocation(): ?array
     {
         return $this->geoLocation;
     }
@@ -113,23 +131,50 @@ class Address
     /**
      * @param array $geoLocation
      */
-    public function setGeoLocation($geoLocation)
+    public function setGeoLocation(array $geoLocation)
     {
         $this->geoLocation = $geoLocation;
     }
 
     /**
+     * @return float
+     */
+    public function getSurface(): ?float
+    {
+        return $this->surface;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBuildingAge(): ?int
+    {
+        return $this->buildingAge;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPurpose(): ?string
+    {
+        return $this->purpose;
+    }
+
+    /**
      * @return array
      */
-    public function toArray()
+    public function jsonSerialize(): array
     {
         return [
-            'street'        => $this->getStreet(),
-            'zipcode'       => $this->getZipcode(),
-            'city'          => $this->getCity(),
-            'house_number'  => $this->getNumber(),
-            'province'      => $this->getProvince(),
-            'municipality'  => $this->getMunicipality(),
+            'street' => $this->getStreet(),
+            'postcode' => $this->getPostcode(),
+            'city' => $this->getCity(),
+            'house_number' => $this->getNumber(),
+            'province' => $this->getProvince(),
+            'municipality' => $this->getMunicipality(),
+            'surface'  => $this->getSurface(),
+            'building_age'  => $this->getBuildingAge(),
+            'purpose'  => $this->getPurpose(),
             'geo_location'  => $this->getGeoLocation(),
         ];
     }

@@ -1,21 +1,16 @@
 <?php
-/*
-* (c) Wessel Strengholt <wessel.strengholt@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
 
-namespace Usoft\PostcodeBundle\Tests\DependencyInjection;
+
+namespace PostcodeBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
-use Usoft\PostcodeBundle\DependencyInjection\Configuration;
-use Usoft\PostcodeBundle\DependencyInjection\UsoftPostcodeExtension;
+use PostcodeBundle\DependencyInjection\Configuration;
+use PostcodeBundle\DependencyInjection\PostcodeExtension;
 
 /**
  * Class ConfigurationTest
  *
- * @author Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
  */
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
@@ -25,9 +20,9 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testIt_converts_extension_elements_to_extensions()
     {
         $expectedConfiguration = [
-            'apiwise' => [
-                'key' => 'secret-apiwise-key',
-            ]
+            'api' => [
+                'key' => 'secret',
+            ],
         ];
 
         $sources = [__DIR__ . '/Fixtures/config.yml'];
@@ -40,7 +35,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
      */
     protected function getContainerExtension()
     {
-        return new UsoftPostcodeExtension();
+        return new PostcodeExtension();
     }
 
     /**

@@ -1,31 +1,25 @@
 <?php
-/*
-* (c) Wessel Strengholt <wessel.strengholt@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
 
-namespace Usoft\PostcodeBundle\Tests\Services;
+
+namespace PostcodeBundle\Tests\Services;
 
 use PHPUnit\Framework\TestCase;
-use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Usoft\PostcodeBundle\Services\AddressClient;
+use PostcodeBundle\Services\AddressClient;
 
 /**
  * Class AddressClientTest
  *
- * @author Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
  */
 class AddressClientTest extends TestCase
 {
     /** @var AddressClient */
     private $addressClient;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|ClientInterface */
-    private $guzzle;
+    /** @var \PHPUnit_Framework_MockObject_MockObject|\FH\PostcodeAPI\Client */
+    private $apiClient;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
     private $response;
@@ -35,102 +29,72 @@ class AddressClientTest extends TestCase
 
     public function setUp()
     {
-        $this->guzzle   = $this->createClientInterfaceMock();
-        $this->response = $this->createResponseInterfaceMock();
+        $this->apiClient = $this->createApiClientMock();
         $this->stream   = $this->createStreamInterfaceMock();
 
-        $this->addressClient = new AddressClient($this->guzzle, 'secret-key');
-    }
-
-    public function testGetAddress()
-    {
-        $this->guzzle->expects($this->once())
-            ->method('send')
-            ->willReturn($this->response);
-
-        $this->response->expects($this->once())
-            ->method('getStatusCode')
-            ->willReturn(200);
-
-        $this->response->expects($this->once())
-            ->method('getBody')
-            ->willReturn($this->stream);
-
-        $this->stream->expects($this->once())
-            ->method('getContents')
-            ->willReturn(file_get_contents(__DIR__ . '/response.json'));
-
-        $this->assertInstanceOf('Usoft\PostcodeBundle\Model\Address', $this->addressClient->getAddress('1010AB', 18));
+        $this->addressClient = new AddressClient($this->apiClient);
     }
 
     /**
-     * @expectedException \Usoft\PostcodeBundle\Exceptions\InvalidPostcodeException
+     * @throws \PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @throws \PostcodeBundle\Exceptions\InvalidPostcodeException
+     */
+    public function testGetAddresses()
+    {
+        $this->apiClient->expects($this->once())
+            ->method('getAddresses')
+            ->willReturn(json_decode(file_get_contents(__DIR__ . '/response.json')));
+
+        $addresses = $this->addressClient->getAddresses('1010AB', 18);
+
+        $this->assertCount(1, $addresses);
+        $this->assertInstanceOf("\PostcodeBundle\Model\Address", reset($addresses));
+    }
+
+    /**
+     * @expectedException \PostcodeBundle\Exceptions\InvalidPostcodeException
+     * @throws \PostcodeBundle\Exceptions\InvalidApiResponseException
      */
     public function testGetAddressWithInvalidPostcode()
     {
-        $this->guzzle->expects($this->never())
-            ->method('send');
+        $this->apiClient->expects($this->never())
+            ->method('getAddresses');
 
-        $this->addressClient->getAddress('*@NXNI@', 18);
+        $this->addressClient->getAddresses('*@NXNI@', 18);
     }
 
     /**
-     * @expectedException \Usoft\PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @expectedException \PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @throws \PostcodeBundle\Exceptions\InvalidPostcodeException
      */
     public function testGetAddressWithInvalidResponse()
     {
-        $this->guzzle->expects($this->once())
-            ->method('send')
+        $this->apiClient->expects($this->once())
+            ->method('getAddresses')
             ->willReturn($this->response);
 
-        $this->response->expects($this->once())
-            ->method('getStatusCode')
-            ->willReturn(401);
-
-        $this->response->expects($this->never())
-            ->method('getBody');
-
-        $this->addressClient->getAddress('1010AB', 18);
+        $this->addressClient->getAddresses('1010AB', 18);
     }
 
     /**
-     * @expectedException \Usoft\PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @expectedException \PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @throws \PostcodeBundle\Exceptions\InvalidPostcodeException
      */
     public function testGetAddressWithInvalidJsonResponse()
     {
-        $this->guzzle->expects($this->once())
-            ->method('send')
-            ->willReturn($this->response);
+        $this->apiClient->expects($this->once())
+            ->method('getAddresses')
+            ->willReturn(json_decode(file_get_contents(__DIR__ . '/invalid.json')));
 
-        $this->response->expects($this->once())
-            ->method('getStatusCode')
-            ->willReturn(200);
-
-        $this->response->expects($this->once())
-            ->method('getBody')
-            ->willReturn($this->stream);
-
-        $this->stream->expects($this->once())
-            ->method('getContents')
-            ->willReturn(file_get_contents(__DIR__ . '/invalid.json'));
-
-        $this->addressClient->getAddress('1010AB', 18);
+        $this->addressClient->getAddresses('1010AB', 18);
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ClientInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|\FH\PostcodeAPI\Client
      */
-    private function createClientInterfaceMock()
+    private function createApiClientMock()
     {
-        return $this->createMock('GuzzleHttp\ClientInterface');
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ResponseInterface
-     */
-    private function createResponseInterfaceMock()
-    {
-        return $this->createMock('Psr\Http\Message\ResponseInterface');
+        return $this->createMock('\FH\PostcodeAPI\Client');
     }
 
     /**
