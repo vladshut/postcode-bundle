@@ -1,5 +1,5 @@
 {
-    "name": "shivella/postcode-bundle",
+    "name": "vladshut/postcode-bundle",
     "type": "symfony-bundle",
     "description": "Symfony Postcode bundle",
     "keywords": ["Postcode", "Bundle", "Symfony", "Zipcode", "Address", "Apiwise", "postcode-api"],
