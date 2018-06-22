@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/framework-bundle": "^2.7 || ^3.0 || ^4.0",
+        "symfony/framework-bundle": ">=2.7",
         "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
