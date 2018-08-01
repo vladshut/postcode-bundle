@@ -48,6 +48,9 @@ class Address implements \JsonSerializable
     /** @var string */
     private $addition;
 
+    /** @var null|string */
+    private $type;
+
     /**
      * @param string $apiId
      * @param string $street
@@ -61,6 +64,7 @@ class Address implements \JsonSerializable
      * @param null|string $purpose
      * @param null|string $letter
      * @param null|string $addition
+     * @param null|string $type
      */
     public function __construct(
         string $apiId,
@@ -74,7 +78,8 @@ class Address implements \JsonSerializable
         ?int $buildingAge,
         ?string $purpose,
         ?string $letter,
-        ?string $addition
+        ?string $addition,
+        ?string $type
     )
     {
         $this->apiId = $apiId;
@@ -89,6 +94,7 @@ class Address implements \JsonSerializable
         $this->purpose = $purpose;
         $this->letter = $letter;
         $this->addition = $addition;
+        $this->type = $type;
     }
 
     /**
@@ -204,6 +210,14 @@ class Address implements \JsonSerializable
     }
 
     /**
+     * @return null|string
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize(): array
@@ -222,6 +236,7 @@ class Address implements \JsonSerializable
             'geo_location' => $this->getGeoLocation(),
             'letter' => $this->getLetter(),
             'addition' => $this->getAddition(),
+            'type' => $this->getType(),
         ];
     }
 }

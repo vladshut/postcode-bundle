@@ -28,6 +28,7 @@ class AddressTest extends TestCase
             'geo_location' => ['lat' => 42.3243, 'long' => 32.3424],
             'letter' => 'A',
             'addition' => null,
+            'type' => 'Verblijfsobject',
         ];
 
         $address = new Address(
@@ -42,7 +43,8 @@ class AddressTest extends TestCase
             $addressValues['building_age'],
             $addressValues['purpose'],
             $addressValues['letter'],
-            $addressValues['addition']
+            $addressValues['addition'],
+            $addressValues['type']
         );
         $address->setGeoLocation($addressValues['geo_location']);
 
@@ -59,6 +61,7 @@ class AddressTest extends TestCase
         $this->assertSame($address->getGeoLocation(), $addressValues['geo_location']);
         $this->assertSame($address->getLetter(), $addressValues['letter']);
         $this->assertSame($address->getAddition(), $addressValues['addition']);
+        $this->assertSame($address->getType(), $addressValues['type']);
 
         $this->assertSame($addressValues, $address->jsonSerialize());
     }

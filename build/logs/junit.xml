@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="Tests/" tests="7" assertions="25" errors="0" failures="0" skipped="0" time="0.021368">
-    <testsuite name="PostcodeBundle\Tests\DependencyInjection\ConfigurationTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/ConfigurationTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.010742">
-      <testcase name="testIt_converts_extension_elements_to_extensions" class="PostcodeBundle\Tests\DependencyInjection\ConfigurationTest" classname="PostcodeBundle.Tests.DependencyInjection.ConfigurationTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/ConfigurationTest.php" line="20" assertions="1" time="0.010742"/>
+  <testsuite name="Tests/" tests="7" assertions="26" errors="0" failures="0" skipped="0" time="0.022316">
+    <testsuite name="PostcodeBundle\Tests\DependencyInjection\ConfigurationTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/ConfigurationTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.011918">
+      <testcase name="testIt_converts_extension_elements_to_extensions" class="PostcodeBundle\Tests\DependencyInjection\ConfigurationTest" classname="PostcodeBundle.Tests.DependencyInjection.ConfigurationTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/ConfigurationTest.php" line="20" assertions="1" time="0.011918"/>
     </testsuite>
-    <testsuite name="PostcodeBundle\Tests\DependencyInjection\PostcodeExtensionTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/PostcodeExtensionTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.005553">
-      <testcase name="testAfterLoadingTheCorrectParameterHasBeenSet" class="PostcodeBundle\Tests\DependencyInjection\PostcodeExtensionTest" classname="PostcodeBundle.Tests.DependencyInjection.PostcodeExtensionTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/PostcodeExtensionTest.php" line="15" assertions="1" time="0.005553"/>
+    <testsuite name="PostcodeBundle\Tests\DependencyInjection\PostcodeExtensionTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/PostcodeExtensionTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.005310">
+      <testcase name="testAfterLoadingTheCorrectParameterHasBeenSet" class="PostcodeBundle\Tests\DependencyInjection\PostcodeExtensionTest" classname="PostcodeBundle.Tests.DependencyInjection.PostcodeExtensionTest" file="/home/vs/work/postcode-bundle/Tests/DependencyInjection/PostcodeExtensionTest.php" line="15" assertions="1" time="0.005310"/>
     </testsuite>
-    <testsuite name="PostcodeBundle\Tests\Model\AddressTest" file="/home/vs/work/postcode-bundle/Tests/Model/AddressTest.php" tests="1" assertions="14" errors="0" failures="0" skipped="0" time="0.000295">
-      <testcase name="testAddress" class="PostcodeBundle\Tests\Model\AddressTest" classname="PostcodeBundle.Tests.Model.AddressTest" file="/home/vs/work/postcode-bundle/Tests/Model/AddressTest.php" line="15" assertions="14" time="0.000295"/>
+    <testsuite name="PostcodeBundle\Tests\Model\AddressTest" file="/home/vs/work/postcode-bundle/Tests/Model/AddressTest.php" tests="1" assertions="15" errors="0" failures="0" skipped="0" time="0.000290">
+      <testcase name="testAddress" class="PostcodeBundle\Tests\Model\AddressTest" classname="PostcodeBundle.Tests.Model.AddressTest" file="/home/vs/work/postcode-bundle/Tests/Model/AddressTest.php" line="15" assertions="15" time="0.000290"/>
     </testsuite>
-    <testsuite name="PostcodeBundle\Tests\Services\AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" tests="4" assertions="9" errors="0" failures="0" skipped="0" time="0.004778">
-      <testcase name="testGetAddresses" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="42" assertions="3" time="0.004278"/>
-      <testcase name="testGetAddressWithInvalidPostcode" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="58" assertions="2" time="0.000291"/>
-      <testcase name="testGetAddressWithInvalidResponse" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="70" assertions="2" time="0.000119"/>
-      <testcase name="testGetAddressWithInvalidJsonResponse" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="83" assertions="2" time="0.000090"/>
+    <testsuite name="PostcodeBundle\Tests\Services\AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" tests="4" assertions="9" errors="0" failures="0" skipped="0" time="0.004798">
+      <testcase name="testGetAddresses" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="42" assertions="3" time="0.004235"/>
+      <testcase name="testGetAddressWithInvalidPostcode" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="58" assertions="2" time="0.000347"/>
+      <testcase name="testGetAddressWithInvalidResponse" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="70" assertions="2" time="0.000128"/>
+      <testcase name="testGetAddressWithInvalidJsonResponse" class="PostcodeBundle\Tests\Services\AddressClientTest" classname="PostcodeBundle.Tests.Services.AddressClientTest" file="/home/vs/work/postcode-bundle/Tests/Services/AddressClientTest.php" line="83" assertions="2" time="0.000088"/>
     </testsuite>
   </testsuite>
 </testsuites>
