@@ -15,6 +15,7 @@ class AddressTest extends TestCase
     public function testAddress()
     {
         $addressValues = [
+            'apiId' => '8672364782364',
             'street' => 'Test Street',
             'postcode' => '1010AB',
             'city' => 'Haarlem',
@@ -25,9 +26,12 @@ class AddressTest extends TestCase
             'building_age' => 1994,
             'purpose' => 'living',
             'geo_location' => ['lat' => 42.3243, 'long' => 32.3424],
+            'letter' => 'A',
+            'addition' => null,
         ];
 
         $address = new Address(
+            $addressValues['apiId'],
             $addressValues['street'],
             $addressValues['postcode'],
             $addressValues['city'],
@@ -36,11 +40,13 @@ class AddressTest extends TestCase
             $addressValues['municipality'],
             $addressValues['surface'],
             $addressValues['building_age'],
-            $addressValues['purpose']
-
+            $addressValues['purpose'],
+            $addressValues['letter'],
+            $addressValues['addition']
         );
         $address->setGeoLocation($addressValues['geo_location']);
 
+        $this->assertSame($address->getApiId(), $addressValues['apiId']);
         $this->assertSame($address->getStreet(), $addressValues['street']);
         $this->assertSame($address->getPostcode(), $addressValues['postcode']);
         $this->assertSame($address->getCity(), $addressValues['city']);
@@ -51,6 +57,8 @@ class AddressTest extends TestCase
         $this->assertSame($address->getBuildingAge(), $addressValues['building_age']);
         $this->assertSame($address->getPurpose(), $addressValues['purpose']);
         $this->assertSame($address->getGeoLocation(), $addressValues['geo_location']);
+        $this->assertSame($address->getLetter(), $addressValues['letter']);
+        $this->assertSame($address->getAddition(), $addressValues['addition']);
 
         $this->assertSame($addressValues, $address->jsonSerialize());
     }

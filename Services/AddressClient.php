@@ -93,6 +93,9 @@ class AddressClient
         $surface = $data->surface ?? null;
         $buildingAge = $data->year ?? null;
         $purpose = $data->purpose ?? null;
+        $apiId = $data->id ?? null;
+        $letter = $data->letter ?? null;
+        $addition = $data->addition ?? null;
 
         $geoLocation = [
             'longitude'  => $data->geo->center->wgs84->coordinates[0] ?? null,
@@ -100,6 +103,7 @@ class AddressClient
         ];
 
         $address = new Address(
+            $apiId,
             $street,
             $postcode,
             $city,
@@ -108,7 +112,9 @@ class AddressClient
             $municipality,
             $surface,
             $buildingAge,
-            $purpose
+            $purpose,
+            $letter,
+            $addition
         );
 
         $address->setGeoLocation($geoLocation);

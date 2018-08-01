@@ -10,6 +10,9 @@ namespace PostcodeBundle\Model;
 class Address implements \JsonSerializable
 {
     /** @var string */
+    private $apiId;
+
+    /** @var string */
     private $street;
 
     /** @var string */
@@ -39,18 +42,28 @@ class Address implements \JsonSerializable
     /** @var string */
     private $purpose;
 
+    /** @var string */
+    private $letter;
+
+    /** @var string */
+    private $addition;
+
     /**
+     * @param string $apiId
      * @param string $street
      * @param string $postcode
      * @param string $city
      * @param string $number
      * @param string $province
      * @param string $municipality
-     * @param $surface
-     * @param $buildingAge
-     * @param $purpose
+     * @param float|null $surface
+     * @param int|null $buildingAge
+     * @param null|string $purpose
+     * @param null|string $letter
+     * @param null|string $addition
      */
     public function __construct(
+        string $apiId,
         ?string $street,
         ?string $postcode,
         ?string $city,
@@ -59,17 +72,23 @@ class Address implements \JsonSerializable
         ?string $municipality,
         ?float $surface,
         ?int $buildingAge,
-        ?string $purpose
-    ) {
-        $this->street   = $street;
-        $this->postcode  = $postcode;
-        $this->city     = $city;
-        $this->number   = $number;
+        ?string $purpose,
+        ?string $letter,
+        ?string $addition
+    )
+    {
+        $this->apiId = $apiId;
+        $this->street = $street;
+        $this->postcode = $postcode;
+        $this->city = $city;
+        $this->number = $number;
         $this->province = $province;
         $this->municipality = $municipality;
         $this->surface = $surface;
         $this->buildingAge = $buildingAge;
         $this->purpose = $purpose;
+        $this->letter = $letter;
+        $this->addition = $addition;
     }
 
     /**
@@ -161,21 +180,48 @@ class Address implements \JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getApiId(): string
+    {
+        return $this->apiId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLetter(): ?string
+    {
+        return $this->letter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddition(): ?string
+    {
+        return $this->addition;
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize(): array
     {
         return [
+            'apiId' => $this->getApiId(),
             'street' => $this->getStreet(),
             'postcode' => $this->getPostcode(),
             'city' => $this->getCity(),
             'house_number' => $this->getNumber(),
             'province' => $this->getProvince(),
             'municipality' => $this->getMunicipality(),
-            'surface'  => $this->getSurface(),
-            'building_age'  => $this->getBuildingAge(),
-            'purpose'  => $this->getPurpose(),
-            'geo_location'  => $this->getGeoLocation(),
+            'surface' => $this->getSurface(),
+            'building_age' => $this->getBuildingAge(),
+            'purpose' => $this->getPurpose(),
+            'geo_location' => $this->getGeoLocation(),
+            'letter' => $this->getLetter(),
+            'addition' => $this->getAddition(),
         ];
     }
 }
