@@ -145,10 +145,10 @@ class AddressClient
             $addressesObjects[] = $this->getAddressFromApiData($apiData);
         }
 
-        if (isset($data->_links->next)) {
-            $data = $this->client->request($data->_links->next);
+        if (isset($data->_links->next->href)) {
+            $data = $this->client->request($data->_links->next->href);
 
-            $addressesObjects = $this->handleResponse($data, $addressesObjects);
+            $addressesObjects = $this->handleAddressesListResponse($data, $addressesObjects);
         }
 
         return $addressesObjects;
