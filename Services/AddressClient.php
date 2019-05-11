@@ -2,10 +2,16 @@
 
 namespace PostcodeBundle\Services;
 
-use FH\PostcodeAPI\Client;
+use Exception;
+use stdClass;
+use VS\PostcodeAPI\Client;
 use PostcodeBundle\Exceptions\InvalidApiResponseException;
 use PostcodeBundle\Exceptions\InvalidPostcodeException;
 use PostcodeBundle\Model\Address;
+use VS\PostcodeAPI\Exception\CouldNotParseResponseException;
+use VS\PostcodeAPI\Exception\InvalidApiKeyException;
+use VS\PostcodeAPI\Exception\InvalidUrlException;
+use VS\PostcodeAPI\Exception\ServerErrorException;
 
 /**
  * Class AddressClient
@@ -33,6 +39,7 @@ class AddressClient
      * @return Address[]|array
      * @throws InvalidApiResponseException
      * @throws InvalidPostcodeException
+     * @throws \Http\Client\Exception
      */
     public function getAddresses($postcode, int $houseNumber = null, int $from = null)
     {
@@ -42,18 +49,8 @@ class AddressClient
 
         try {
             $data = $this->client->getAddresses($postcode, $houseNumber, $from);
-
-            if (!isset($data->_embedded->addresses)) {
-                throw new InvalidApiResponseException('Address cannot be set from API data');
-            }
-
-            $addresses = $data->_embedded->addresses;
-            $addressesObjects = [];
-
-            foreach ($addresses as $apiData) {
-                $addressesObjects[] = $this->getAddressFromApiData($apiData);
-            }
-        } catch (\Exception $exception) {
+            $addressesObjects = $this->handleAddressesListResponse($data);
+        } catch (Exception $exception) {
             throw new InvalidApiResponseException($exception->getMessage());
         }
 
@@ -65,13 +62,14 @@ class AddressClient
      *
      * @return Address
      * @throws InvalidApiResponseException
+     * @throws \Http\Client\Exception
      */
     public function getAddress(string $id)
     {
         try {
             $apiData = $this->client->getAddress($id);
             $address = $this->getAddressFromApiData($apiData);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InvalidApiResponseException($exception->getMessage());
         }
 
@@ -79,10 +77,10 @@ class AddressClient
     }
 
     /**
-     * @param \stdClass $data
+     * @param stdClass $data
      * @return Address
      */
-    private function getAddressFromApiData(\stdClass $data)
+    private function getAddressFromApiData(stdClass $data)
     {
         $city = $data->city->label ?? null;
         $municipality = $data->municipality->label ?? null;
@@ -122,5 +120,37 @@ class AddressClient
         $address->setGeoLocation($geoLocation);
 
         return $address;
+    }
+
+    /**
+     * @param $data
+     * @param array $addressesObjects
+     * @return array
+     * @throws InvalidApiResponseException
+     * @throws \Http\Client\Exception
+     * @throws CouldNotParseResponseException
+     * @throws InvalidApiKeyException
+     * @throws InvalidUrlException
+     * @throws ServerErrorException
+     */
+    private function handleAddressesListResponse($data, $addressesObjects = [])
+    {
+        if (!isset($data->_embedded->addresses)) {
+            throw new InvalidApiResponseException('Address cannot be set from API data');
+        }
+
+        $addresses = $data->_embedded->addresses;
+
+        foreach ($addresses as $apiData) {
+            $addressesObjects[] = $this->getAddressFromApiData($apiData);
+        }
+
+        if (isset($data->_links->next)) {
+            $data = $this->client->request($data->_links->next);
+
+            $addressesObjects = $this->handleResponse($data, $addressesObjects);
+        }
+
+        return $addressesObjects;
     }
 }

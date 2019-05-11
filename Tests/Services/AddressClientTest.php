@@ -3,7 +3,12 @@
 
 namespace PostcodeBundle\Tests\Services;
 
+use Http\Client\Exception;
+use VS\PostcodeAPI\Client;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
+use PostcodeBundle\Exceptions\InvalidApiResponseException;
+use PostcodeBundle\Exceptions\InvalidPostcodeException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use PostcodeBundle\Services\AddressClient;
@@ -18,13 +23,13 @@ class AddressClientTest extends TestCase
     /** @var AddressClient */
     private $addressClient;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|\FH\PostcodeAPI\Client */
+    /** @var PHPUnit_Framework_MockObject_MockObject|Client */
     private $apiClient;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
+    /** @var PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
     private $response;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|StreamInterface */
+    /** @var PHPUnit_Framework_MockObject_MockObject|StreamInterface */
     private $stream;
 
     public function setUp()
@@ -36,8 +41,9 @@ class AddressClientTest extends TestCase
     }
 
     /**
-     * @throws \PostcodeBundle\Exceptions\InvalidApiResponseException
-     * @throws \PostcodeBundle\Exceptions\InvalidPostcodeException
+     * @throws InvalidApiResponseException
+     * @throws InvalidPostcodeException
+     * @throws Exception
      */
     public function testGetAddresses()
     {
@@ -52,8 +58,10 @@ class AddressClientTest extends TestCase
     }
 
     /**
-     * @expectedException \PostcodeBundle\Exceptions\InvalidPostcodeException
-     * @throws \PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @expectedException PostcodeBundle\Exceptions\InvalidPostcodeException
+     * @throws Exception
+     * @throws InvalidApiResponseException
+     * @throws InvalidPostcodeException
      */
     public function testGetAddressWithInvalidPostcode()
     {
@@ -64,8 +72,10 @@ class AddressClientTest extends TestCase
     }
 
     /**
-     * @expectedException \PostcodeBundle\Exceptions\InvalidApiResponseException
-     * @throws \PostcodeBundle\Exceptions\InvalidPostcodeException
+     * @expectedException PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @throws Exception
+     * @throws InvalidApiResponseException
+     * @throws InvalidPostcodeException
      */
     public function testGetAddressWithInvalidResponse()
     {
@@ -77,8 +87,10 @@ class AddressClientTest extends TestCase
     }
 
     /**
-     * @expectedException \PostcodeBundle\Exceptions\InvalidApiResponseException
-     * @throws \PostcodeBundle\Exceptions\InvalidPostcodeException
+     * @expectedException PostcodeBundle\Exceptions\InvalidApiResponseException
+     * @throws Exception
+     * @throws InvalidApiResponseException
+     * @throws InvalidPostcodeException
      */
     public function testGetAddressWithInvalidJsonResponse()
     {
@@ -90,15 +102,15 @@ class AddressClientTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\FH\PostcodeAPI\Client
+     * @return PHPUnit_Framework_MockObject_MockObject|Client
      */
     private function createApiClientMock()
     {
-        return $this->createMock('\FH\PostcodeAPI\Client');
+        return $this->createMock(Client::class);
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|StreamInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|StreamInterface
      */
     private function createStreamInterfaceMock()
     {

@@ -15,7 +15,7 @@
         "php": ">=7.2",
         "symfony/framework-bundle": ">=2.7",
         "guzzlehttp/guzzle": "^6.2",
-        "freshheads/postcode-api-client": "^3.1",
+        "vladshut/postcode-api-client": "1.0",
         "php-http/guzzle6-adapter": "^1.1",
         "ext-json": "*"
     },
